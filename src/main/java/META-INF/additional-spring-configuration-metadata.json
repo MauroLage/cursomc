@@ -1,0 +1,42 @@
+{"properties": [
+  {
+    "name": "default.sender",
+    "type": "java.lang.String",
+    "description": "A description for 'default.sender'"
+  },
+  {
+    "name": "default.recipient",
+    "type": "java.lang.String",
+    "description": "A description for 'default.recipient'"
+  },
+  {
+    "name": "jwt.secret",
+    "type": "java.lang.String",
+    "description": "Sequencia de caracteres para assinar Token de 'jwt.secret' - Uma palavra qualquer para implementar a seguran�a"
+  },
+  {
+    "name": "jwt.expiration",
+    "type": "java.lang.String",
+    "description": "Tempo de expira�ao da sessao do usuario em milesegusndos (60000)1 minuto � para teste o ideal � 24(60000x60x24) hrs o semana'jwt.expiration'"
+  },
+  {
+    "name": "s3.region",
+    "type": "java.lang.String",
+    "description": "A description for 's3.region'"
+  },
+  {
+    "name": "aws.access_key_id",
+    "type": "java.lang.String",
+    "description": "A description for 'aws.access_key_id'"
+  },
+  {
+    "name": "aws.secret_access_key",
+    "type": "java.lang.String",
+    "description": "A description for 'aws.secret_access_key'"
+  },
+  {
+    "name": "s3.bucket",
+    "type": "java.lang.String",
+    "description": "A description for 's3.bucket'"
+  }
+]}
