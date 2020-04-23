@@ -43,5 +43,10 @@
     "name": "img.prefix.client.profile",
     "type": "java.lang.String",
     "description": "Prefixo para nome da imagen do profile(perfil) do Cliente'"
+  },
+  {
+    "name": "img.profile.size",
+    "type": "java.lang.String",
+    "description": "Definindo um tamanho padrao para a imagem do profile do Cliente'"
   }
 ]}
