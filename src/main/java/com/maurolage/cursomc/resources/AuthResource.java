@@ -36,7 +36,7 @@ public class AuthResource {
 		//Cors (Cross-origin resource sharing): quais recursos (ex: quais métodos HTTP? quais headers?) 
 		//estarão disponíveis para requisições advindas de origens diferentes? 
 		
-		response.addHeader("access-control-expose-headers", "Authorization")
+		response.addHeader("access-control-expose-headers", "Authorization");
 		return ResponseEntity.noContent().build();
 	}
 	

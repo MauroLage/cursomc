@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.maurolage.cursomc.domain.Cidade;
@@ -22,7 +23,6 @@ import com.maurolage.cursomc.domain.enums.Perfil;
 import com.maurolage.cursomc.domain.enums.TipoCliente;
 import com.maurolage.cursomc.dto.ClienteDTO;
 import com.maurolage.cursomc.dto.ClienteNewDTO;
-//import com.maurolage.cursomc.repositories.CidadeRepository;
 import com.maurolage.cursomc.repositories.ClienteRepository;
 import com.maurolage.cursomc.repositories.EnderecoRepository;
 import com.maurolage.cursomc.security.UserSS;
@@ -65,6 +65,7 @@ public class ClienteService {
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
 	}
 	
+	@Transactional
 	public Cliente insert(Cliente obj) {
 		obj.setId(null);
 		obj = repo.save(obj);
@@ -92,6 +93,21 @@ public class ClienteService {
 		return repo.findAll();
 	}
 	
+	public Cliente findByEmail(String email) {
+	
+		UserSS user = UserService.authenticated();
+		
+		if (user==null || !user.hasRole(Perfil.ADMIN) && !email.equals(user.getUsername())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+				
+		Cliente obj = repo.findByEmail(email);
+		if (obj == null) {
+			throw new ObjectNotFoundException("Objeto não encontrado! Id: " + user.getId() + " , Tipo: "+ Cliente.class.getName());
+		}
+		return obj;
+	}
+	
 	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest =  PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy); 
 		return repo.findAll(pageRequest);
@@ -106,7 +122,6 @@ public class ClienteService {
 				TipoCliente.ToEnum(objDto.getTipo()),
 				pe.encode(objDto.getSenha()));
 		
-		//Optional<Cidade> cid = cidadeRepository.findById(objDto.getCidadeId());
 		Cidade cid = new Cidade(objDto.getCidadeId(), null, null);
 		
 		Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(), 
@@ -129,20 +144,15 @@ public class ClienteService {
 	}
 	
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
-		
 		UserSS user = UserService.authenticated(); // Verifica se o cliente esta logado
 		if (user == null) {
 			throw new AuthorizationException("Acesso negado");
 		}
-		
 		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
 		jpgImage = imageService.cropSquare(jpgImage);
 		jpgImage = imageService.resize(jpgImage, size);
-		
 		String fileName = prefix + user.getId() + ".jpg";
-				
 		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
-		
 	}
 
 }
